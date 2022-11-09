@@ -5,6 +5,7 @@ import datastructures.worklists.MinFourHeap;
 
 import java.util.Comparator;
 
+
 public class TopKSort {
     public static <E extends Comparable<E>> void sort(E[] array, int k) {
         sort(array, k, (x, y) -> x.compareTo(y));

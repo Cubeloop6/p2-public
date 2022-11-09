@@ -1,17 +1,16 @@
 package datastructures.dictionaries;
 
-import aboveandbeyond.containers.Item;
+import cse332.datastructures.containers.Item;
 import cse332.exceptions.NotYetImplementedException;
-import cse332.interfaces.misc.Dictionary;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
-import datastructures.worklists.ArrayStack;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
 
 /**
  * See cse332/interfaces/trie/TrieMap.java
@@ -95,7 +94,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             temp2 = node.value;
             node.value = value;
 
-        } //end of else
+        }
 
         if(temp2 == null) {
             this.size++;
@@ -147,7 +146,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
                 return false;
             }
 
-        } //end of for key
+        }
         return true;
     }
 
@@ -174,7 +173,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             else {
                 new_node = new_node.pointers.find(low_key);
             }
-        } //end of for key loop
+        }
 
         /**
          *  This part keeps the track of the size
@@ -186,8 +185,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             }
             new_node.value = null;
             this.size--;
-        } // end of first if
-        //throw new NotYetImplementedException();
+        }
     }
 
     @Override
@@ -195,7 +193,6 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         this.size = 0;
         HashTrieNode node = (HashTrieNode)this.root;
         node.pointers.clear();
-        //throw new NotYetImplementedException();
     }
 }
 //push

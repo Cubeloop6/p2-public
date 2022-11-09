@@ -8,8 +8,7 @@ public class HashTrieSet<A extends Comparable<A>, E extends BString<A>> extends 
     /* Note: You should not be adding any methods to this class...you only need to implement
      *       the constructor!  */
 
-    public HashTrieSet(Class<E> Type) {
-        super(new HashTrieMap(Type));
-    }
-
+        public HashTrieSet(Class<E> Type) {
+            super(new HashTrieMap(Type));
+        }
 }

@@ -5,6 +5,7 @@ import datastructures.worklists.MinFourHeap;
 
 import java.util.Comparator;
 
+
 public class HeapSort {
     public static <E extends Comparable<E>> void sort(E[] array) {
         sort(array, (x, y) -> x.compareTo(y));

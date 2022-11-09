@@ -3,6 +3,7 @@ package p2.wordcorrector;
 import cse332.types.AlphabeticString;
 import datastructures.dictionaries.HashTrieMap;
 
+
 public class AutocompleteTrie extends HashTrieMap<Character, AlphabeticString, Integer> {
 
     public AutocompleteTrie() {

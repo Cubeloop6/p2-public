@@ -5,6 +5,7 @@ import cse332.interfaces.worklists.LIFOWorkList;
 
 import java.util.NoSuchElementException;
 
+
 /**
  * See cse332/interfaces/worklists/LIFOWorkList.java
  * for method specifications.

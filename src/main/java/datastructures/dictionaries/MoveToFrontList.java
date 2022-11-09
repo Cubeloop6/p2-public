@@ -1,10 +1,12 @@
 package datastructures.dictionaries;
 
-import aboveandbeyond.containers.Item;
+import cse332.datastructures.containers.Item;
+import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.DeletelessDictionary;
 import cse332.interfaces.misc.SimpleIterator;
 
 import java.util.Iterator;
+
 
 /**
  * 1. The list is typically not sorted.
@@ -77,7 +79,7 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
             }
             while (current.next != null && current.next.data != null &&
                     !current.next.data.key.equals(key)) {
-                    current = current.next;
+                current = current.next;
             }
             if (current.next != null && current.next.data != null) {
                 returnValue = current.next.data.value;
