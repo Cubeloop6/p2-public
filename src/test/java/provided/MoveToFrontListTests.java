@@ -1,6 +1,6 @@
 package provided;
 
-import cse332.datastructures.containers.Item;
+import aboveandbeyond.containers.Item;
 import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;

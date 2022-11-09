@@ -1,6 +1,6 @@
 package cse332.interfaces.misc;
 
-import cse332.datastructures.containers.Item;
+import aboveandbeyond.containers.Item;
 
 import java.util.Iterator;
 

@@ -1,6 +1,6 @@
 package provided;
 
-import cse332.datastructures.containers.Item;
+import aboveandbeyond.containers.Item;
 import cse332.datastructures.trees.BinarySearchTree.BSTNode;
 import cse332.interfaces.misc.Dictionary;
 import datastructures.dictionaries.AVLTree;

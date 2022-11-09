@@ -1,6 +1,6 @@
 package cse332.interfaces.trie;
 
-import cse332.datastructures.containers.Item;
+import aboveandbeyond.containers.Item;
 import cse332.interfaces.misc.Dictionary;
 import cse332.interfaces.misc.SimpleIterator;
 import cse332.interfaces.worklists.LIFOWorkList;

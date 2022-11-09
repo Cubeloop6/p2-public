@@ -1,11 +1,11 @@
 package datastructures.dictionaries;
 
-import cse332.datastructures.containers.Item;
-import cse332.exceptions.NotYetImplementedException;
+import aboveandbeyond.containers.Item;
 import cse332.interfaces.misc.DeletelessDictionary;
 import cse332.interfaces.misc.Dictionary;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 /**
@@ -25,24 +25,140 @@ import java.util.function.Supplier;
  */
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>> newChain;
+    private double loadFactor;
+    private Dictionary<K,V>[] array;
+    private final int[] sizes = {17, 37, 79, 163, 331, 673, 1361, 2729, 5471, 10949, 21911, 43853, 87719, 175447, 350899, 701819};
+    private int starting;
+    private double count;
+    private int counter;
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
+        loadFactor = 0.0;
+        array = new Dictionary[7];
+        for(int i = 0; i < 7; i ++) {
+            array[i] = newChain.get();
+        }
+        starting = 0;
+        count = 0;
+        counter = 0;
+    }
+
+    public int size() {
+        return counter;
     }
 
     @Override
     public V insert(K key, V value) {
-        throw new NotYetImplementedException();
+        if(loadFactor >= 1) {
+            this.array = resize(array);
+        }
+        int index = Math.abs(key.hashCode() % array.length);
+        if(index >= 0) {
+            if(array[index] == null) {
+                array[index] = newChain.get();
+            }
+            V returnValue = null;
+            if(this.find(key) == null) {
+                counter ++;
+            } else {
+                returnValue = this.find(key);
+            }
+            array[index].insert(key, value);
+            loadFactor = (++count) / array.length;
+            return returnValue;
+        } else {
+            return null;
+        }
     }
 
     @Override
     public V find(K key) {
-        throw new NotYetImplementedException();
+        int index = Math.abs(key.hashCode() % array.length);
+        if(index >= 0) {
+            if(array[index] == null) {
+                array[index] = newChain.get();
+                return null;
+            }
+            return array[index].find(key);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Iterator<Item<K, V>> iterator() {
-        throw new NotYetImplementedException();
+
+        if(array[0] == null) {
+            array[0] = newChain.get();
+        }
+        Iterator<Item<K,V>> it = new Iterator<Item<K,V>>() {
+            private int iteratorStarter = 0;
+
+            Iterator<Item<K,V>> iteratorConsideration = array[0].iterator();
+
+            @Override
+            public boolean hasNext() {
+                if(iteratorStarter < array.length && !iteratorConsideration.hasNext()) {
+                    if(array[iteratorStarter + 1] == null) {
+                        iteratorStarter++;
+
+                        while(array[iteratorStarter ] == null) {
+                            iteratorStarter ++;
+                            if(iteratorStarter >= array.length) {
+                                return false;
+                            }
+                        }
+                    } else {
+                        iteratorStarter ++;
+                    }
+                    if(iteratorStarter < array.length) {
+                        iteratorConsideration = array[iteratorStarter].iterator();
+                    }
+                }
+                if(iteratorStarter >= array.length) {
+                    return false;
+                } else {
+                    return iteratorConsideration.hasNext();
+                }
+            }
+
+            @Override
+            public Item<K, V> next() {
+                if(!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return iteratorConsideration.next();
+            }
+        };
+        return it;
+    }
+
+    private Dictionary<K,V>[] resize(Dictionary<K,V> arrayChange[]) {
+        Dictionary<K,V>[] changedDictionary;
+        if(starting > 15) {
+            changedDictionary = new Dictionary[arrayChange.length * 2];
+        } else {
+            changedDictionary = new Dictionary[sizes[starting]];
+        }
+        for(int i = 0; i < arrayChange.length; i++) {
+            if(arrayChange[i] != null) {
+                for(Item<K,V> item : arrayChange[i]) {
+                    int index = Math.abs(item.key.hashCode() % changedDictionary.length);
+                    if(index >= 0) {
+                        if(changedDictionary[index] == null) {
+                            changedDictionary[index] = newChain.get();
+                        }
+                        changedDictionary[index].insert(item.key, item.value);
+                    } else {
+                        return new Dictionary[0];
+                    }
+                }
+            }
+        }
+        starting ++;
+        return changedDictionary;
+
     }
 
     /**
