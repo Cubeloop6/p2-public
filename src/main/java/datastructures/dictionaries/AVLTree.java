@@ -68,11 +68,10 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         while (current != null) {
             path.add(current);
             direction = Integer.signum(key.compareTo(current.key));
-            if (direction == 0) { // Look, the key's already here
+            if (direction == 0) {
                 return current;
             }
-            // direction will be -1 or 1
-            // direction + 1 = {0, 2} -> {0, 1}
+
             child = Integer.signum(direction + 1);
             current = (AVLNode)current.children[child];
         }
@@ -87,7 +86,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         } else {
             problemNodeParent = this.updateheightDifferences(path);
         }
-        if (problemNodeParent != null) { // tree became imbalanced somewhere that is not the root
+        if (problemNodeParent != null) {
             int subTreeDirection = Integer.signum(key.compareTo(problemNodeParent.key));
             int subTree = Integer.signum(subTreeDirection + 1);
             problemNodeParent.children[subTree] = this.rotate(path);
@@ -103,10 +102,8 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         K second = child.key;
         K third = grandchild.key;
         int direction = Integer.signum(third.compareTo(first));
-        // direction + 1 = {0, 2} -> {0, 1}
         int side = Integer.signum(direction + 1);
         AVLNode remainder = null;
-        // First, we account for possible kink case
         if (checkKinkCase(first, third, second) || checkKinkCase(second, third, first)) {
             parent.children[side] = grandchild;
             remainder = (AVLNode)grandchild.children[side];
@@ -118,12 +115,9 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             child.heightDifference += direction;
             grandchild.heightDifference += direction;
         }
-        // Now we know for sure we have the straight case
         remainder = (AVLNode)child.children[1 - side];
         parent.children[side] = remainder;
         child.children[1 - side] = parent;
-        // if direction == -1, child.heightDifference++; and parent.heightDifference += 2
-        // if direction == 1, child.heightDifference--; and parent.heightDifference -= 2
         child.heightDifference += (direction * -1);
         parent.heightDifference += (direction * -2);
         return child;
