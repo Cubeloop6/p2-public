@@ -74,7 +74,6 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
         this.data[0] = this.data[this.size - 1];
         this.size--;
         if (this.size > 0) {
-            //int firstChildIndex = 1;
             int min = 1;
             for (int i = min + 1; i < min + 4; i++) {
                 if (i < this.size && this.data[i].compareTo(this.data[min]) < 0) {
