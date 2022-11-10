@@ -1,6 +1,6 @@
 package provided;
 
-import aboveandbeyond.containers.Item;
+import cse332.datastructures.containers.Item;
 import cse332.interfaces.misc.Dictionary;
 import datastructures.dictionaries.ChainingHashTable;
 import datastructures.dictionaries.MoveToFrontList;
