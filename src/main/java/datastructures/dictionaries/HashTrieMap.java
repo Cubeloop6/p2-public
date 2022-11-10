@@ -30,34 +30,27 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             this.value = value;
         }
 
-        //No change so far except for changing Map into Chaining Hash
-
 
         @Override
         public Iterator<Entry<A, HashTrieNode>> iterator() {
 
-            /**
-             * This part was pretty exhausting! phew!!
-             */
-
-            Iterator<Item<A, HashTrieNode>> chiHashIt = pointers.iterator();
-            //throw new NotYetImplementedException();
+            Iterator<Item<A, HashTrieNode>> hash = pointers.iterator();
 
             return new Iterator<Entry<A, HashTrieNode>>() {
                 @Override
                 public boolean hasNext() {
-                    return chiHashIt.hasNext();
+                    return hash.hasNext();
                 }
 
                 @Override
                 public Entry<A, HashTrieNode> next() {
-                    Item<A, HashTrieNode> retI = chiHashIt.next();
+                    Item<A, HashTrieNode> retI = hash.next();
                     return new AbstractMap.SimpleEntry<>(retI.key, retI.value);
-                    //throw new NotYetImplementedException();
+
                 }
-            }; //end of the inside iterator
-        }//end of public iterator method
-    } //end of the class
+            };
+        }
+    }
 
 
     public HashTrieMap(Class<K> KClass) {
@@ -68,7 +61,6 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public V insert(K key, V value) {
-        //throw new NotYetImplementedException();
         if(key == null || value == null) {
             throw new IllegalArgumentException();
         }
@@ -124,7 +116,6 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
 
         return node.value;
-        // throw new NotYetImplementedException();
     }
 
     @Override
@@ -175,10 +166,6 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             }
         }
 
-        /**
-         *  This part keeps the track of the size
-         */
-
         if (new_node != null && new_node.value != null) {
             if (temp != null) {
                 new_node.pointers.delete(temp);
@@ -195,4 +182,3 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         node.pointers.clear();
     }
 }
-//push

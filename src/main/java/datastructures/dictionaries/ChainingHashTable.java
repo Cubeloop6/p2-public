@@ -26,20 +26,20 @@ import java.util.function.Supplier;
  * dictionary/list and return that dictionary/list's iterator.
  */
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
-    private Supplier<Dictionary<K, V>> newChain;
-    private double loadFactor;
-    private Dictionary<K,V>[] array;
+    private Supplier<Dictionary<K, V>>chain;
     private final int[] sizes = {17, 37, 79, 163, 331, 673, 1361, 2729, 5471, 10949, 21911, 43853, 87719, 175447, 350899, 701819};
     private int starting;
     private double count;
+    private double loadFactor;
+    private Dictionary<K,V>[] array;
     private int counter;
 
-    public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
-        this.newChain = newChain;
+    public ChainingHashTable(Supplier<Dictionary<K, V>>chain) {
+        this.chain =chain;
         loadFactor = 0.0;
         array = new Dictionary[7];
         for(int i = 0; i < 7; i ++) {
-            array[i] = newChain.get();
+            array[i] =chain.get();
         }
         starting = 0;
         count = 0;
@@ -58,17 +58,17 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         int index = Math.abs(key.hashCode() % array.length);
         if(index >= 0) {
             if(array[index] == null) {
-                array[index] = newChain.get();
+                array[index] =chain.get();
             }
-            V returnValue = null;
+            V val = null;
             if(this.find(key) == null) {
                 counter ++;
             } else {
-                returnValue = this.find(key);
+                val = this.find(key);
             }
             array[index].insert(key, value);
             loadFactor = (++count) / array.length;
-            return returnValue;
+            return val;
         } else {
             return null;
         }
@@ -79,7 +79,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         int index = Math.abs(key.hashCode() % array.length);
         if(index >= 0) {
             if(array[index] == null) {
-                array[index] = newChain.get();
+                array[index] =chain.get();
                 return null;
             }
             return array[index].find(key);
@@ -92,36 +92,36 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     public Iterator<Item<K, V>> iterator() {
 
         if(array[0] == null) {
-            array[0] = newChain.get();
+            array[0] =chain.get();
         }
         Iterator<Item<K,V>> it = new Iterator<Item<K,V>>() {
-            private int iteratorStarter = 0;
+            private int iterator = 0;
 
-            Iterator<Item<K,V>> iteratorConsideration = array[0].iterator();
+            Iterator<Item<K,V>> iterator2 = array[0].iterator();
 
             @Override
             public boolean hasNext() {
-                if(iteratorStarter < array.length && !iteratorConsideration.hasNext()) {
-                    if(array[iteratorStarter + 1] == null) {
-                        iteratorStarter++;
+                if(iterator < array.length && !iterator2.hasNext()) {
+                    if(array[iterator + 1] == null) {
+                        iterator++;
 
-                        while(array[iteratorStarter ] == null) {
-                            iteratorStarter ++;
-                            if(iteratorStarter >= array.length) {
+                        while(array[iterator] == null) {
+                            iterator ++;
+                            if(iterator >= array.length) {
                                 return false;
                             }
                         }
                     } else {
-                        iteratorStarter ++;
+                        iterator ++;
                     }
-                    if(iteratorStarter < array.length) {
-                        iteratorConsideration = array[iteratorStarter].iterator();
+                    if(iterator < array.length) {
+                        iterator2 = array[iterator].iterator();
                     }
                 }
-                if(iteratorStarter >= array.length) {
+                if(iterator >= array.length) {
                     return false;
                 } else {
-                    return iteratorConsideration.hasNext();
+                    return iterator2.hasNext();
                 }
             }
 
@@ -130,36 +130,36 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                 if(!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return iteratorConsideration.next();
+                return iterator2.next();
             }
         };
         return it;
     }
 
     private Dictionary<K,V>[] resize(Dictionary<K,V> arrayChange[]) {
-        Dictionary<K,V>[] changedDictionary;
+        Dictionary<K,V>[] dict;
         if(starting > 15) {
-            changedDictionary = new Dictionary[arrayChange.length * 2];
+            dict = new Dictionary[arrayChange.length * 2];
         } else {
-            changedDictionary = new Dictionary[sizes[starting]];
+            dict = new Dictionary[sizes[starting]];
         }
         for(int i = 0; i < arrayChange.length; i++) {
             if(arrayChange[i] != null) {
                 for(Item<K,V> item : arrayChange[i]) {
-                    int index = Math.abs(item.key.hashCode() % changedDictionary.length);
+                    int index = Math.abs(item.key.hashCode() % dict.length);
                     if(index >= 0) {
-                        if(changedDictionary[index] == null) {
-                            changedDictionary[index] = newChain.get();
+                        if(dict[index] == null) {
+                            dict[index] = chain.get();
                         }
-                        changedDictionary[index].insert(item.key, item.value);
+                        dict[index].insert(item.key, item.value);
                     } else {
                         return new Dictionary[0];
                     }
                 }
             }
         }
-        starting ++;
-        return changedDictionary;
+        starting++;
+        return dict;
 
     }
 

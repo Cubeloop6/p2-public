@@ -49,9 +49,9 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             throw new IllegalArgumentException();
         }
         AVLNode current = this.findAVL(key);
-        V oldValue = current.value;
+        V exVal = current.value;
         current.value = value;
-        return oldValue;
+        return exVal;
     }
 
     private AVLNode findAVL(K key) {
@@ -64,7 +64,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         AVLNode current = (AVLNode)this.root;
         int direction = 0;
         int child = -1;
-        AVLNode problemNodeParent = null;
+        AVLNode parentNode = null;
 
         while (current != null) {
             path.add(current);
@@ -85,12 +85,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (parent.children[1 - child] != null) {
             parent.heightDifference += direction;
         } else {
-            problemNodeParent = this.updateheightDifferences(path);
+            parentNode = this.updateHeight(path);
         }
-        if (problemNodeParent != null) {
-            int subTreeDirection = Integer.signum(key.compareTo(problemNodeParent.key));
+        if (parentNode != null) {
+            int subTreeDirection = Integer.signum(key.compareTo(parentNode.key));
             int subTree = Integer.signum(subTreeDirection + 1);
-            problemNodeParent.children[subTree] = this.rotate(path);
+            parentNode.children[subTree] = this.rotate(path);
         }
         return current;
     }
@@ -105,7 +105,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         int direction = Integer.signum(third.compareTo(first));
         int side = Integer.signum(direction + 1);
         AVLNode remainder = null;
-        if (checkKinkCase(first, third, second) || checkKinkCase(second, third, first)) {
+        if (check(first, third, second) || check(second, third, first)) {
             parent.children[side] = grandchild;
             remainder = (AVLNode)grandchild.children[side];
             child.children[1 - side] = remainder;
@@ -124,7 +124,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return child;
     }
 
-    private AVLNode updateheightDifferences(ArrayStack<AVLNode> path) {
+    private AVLNode updateHeight(ArrayStack<AVLNode> path) {
         AVLNode parent = null;
         AVLNode child = null;
         AVLNode grandchild = null;
@@ -138,26 +138,26 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
                 parent.heightDifference--;
             }
             if (Math.abs(parent.heightDifference) == 2) {
-                if (path.size() == 1) { // parent is the root
-                    this.makeRotationPath(path, parent, child, grandchild);
+                if (path.size() == 1) { 
+                    this.rotate(path, parent, child, grandchild);
                     this.root = this.rotate(path);
                     return null;
                 } else {
                     path.next();
-                    AVLNode parentOfProblem = path.peek();
-                    this.makeRotationPath(path, parent, child, grandchild);
-                    return parentOfProblem;
+                    AVLNode parentPreRotate = path.peek();
+                    this.rotate(path, parent, child, grandchild);
+                    return parentPreRotate;
                 }
             }
         }
         return null;
     }
 
-    private boolean checkKinkCase(K edge1, K middle, K edge2) {
+    private boolean check(K edge1, K middle, K edge2) {
         return edge1.compareTo(middle) < 0 && middle.compareTo(edge2) < 0;
     }
 
-    private void makeRotationPath(ArrayStack<AVLNode> path, AVLNode parent,
+    private void rotate(ArrayStack<AVLNode> path, AVLNode parent,
                                   AVLNode child, AVLNode grandchild) {
 
         path.clear();
