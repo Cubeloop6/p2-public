@@ -38,7 +38,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         this.chain =chain;
         loadFactor = 0.0;
         array = new Dictionary[7];
-        for(int i = 0; i < 7; i ++) {
+        for(int i = 0; i < 7; i++) {
             array[i] =chain.get();
         }
         starting = 0;
@@ -62,7 +62,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             }
             V val = null;
             if(this.find(key) == null) {
-                counter ++;
+                counter++;
             } else {
                 val = this.find(key);
             }
@@ -106,13 +106,13 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                         iterator++;
 
                         while(array[iterator] == null) {
-                            iterator ++;
+                            iterator++;
                             if(iterator >= array.length) {
                                 return false;
                             }
                         }
                     } else {
-                        iterator ++;
+                        iterator++;
                     }
                     if(iterator < array.length) {
                         iterator2 = array[iterator].iterator();
