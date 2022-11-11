@@ -54,6 +54,37 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return exVal;
     }
 
+
+    private AVLNode rotate(ArrayStack<AVLNode> path) {
+        AVLNode grandchild = path.next();
+        AVLNode child = path.next();
+        AVLNode parent = path.next();
+        K first = parent.key;
+        K second = child.key;
+        K third = grandchild.key;
+        int direction = Integer.signum(third.compareTo(first));
+        int side = Integer.signum(direction + 1);
+        AVLNode remainder = null;
+        if (check(first, third, second) || check(second, third, first)) {
+            parent.children[side] = grandchild;
+            remainder = (AVLNode)grandchild.children[side];
+            child.children[1 - side] = remainder;
+            grandchild.children[side] = child;
+            AVLNode temp = child;
+            child = grandchild;
+            grandchild = temp;
+            child.heightDifference += direction;
+            grandchild.heightDifference += direction;
+        }
+        remainder = (AVLNode)child.children[1 - side];
+        parent.children[side] = remainder;
+        child.children[1 - side] = parent;
+        child.heightDifference += (direction * -1);
+        parent.heightDifference += (direction * -2);
+        return child;
+    }
+
+
     private AVLNode findAVL(K key) {
         ArrayStack<AVLNode> path = new ArrayStack<AVLNode>();
         if (this.root == null) {
@@ -93,35 +124,6 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             parentNode.children[subTree] = this.rotate(path);
         }
         return current;
-    }
-
-    private AVLNode rotate(ArrayStack<AVLNode> path) {
-        AVLNode grandchild = path.next();
-        AVLNode child = path.next();
-        AVLNode parent = path.next();
-        K first = parent.key;
-        K second = child.key;
-        K third = grandchild.key;
-        int direction = Integer.signum(third.compareTo(first));
-        int side = Integer.signum(direction + 1);
-        AVLNode remainder = null;
-        if (check(first, third, second) || check(second, third, first)) {
-            parent.children[side] = grandchild;
-            remainder = (AVLNode)grandchild.children[side];
-            child.children[1 - side] = remainder;
-            grandchild.children[side] = child;
-            AVLNode temp = child;
-            child = grandchild;
-            grandchild = temp;
-            child.heightDifference += direction;
-            grandchild.heightDifference += direction;
-        }
-        remainder = (AVLNode)child.children[1 - side];
-        parent.children[side] = remainder;
-        child.children[1 - side] = parent;
-        child.heightDifference += (direction * -1);
-        parent.heightDifference += (direction * -2);
-        return child;
     }
 
     private AVLNode updateHeight(ArrayStack<AVLNode> path) {

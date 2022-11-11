@@ -28,10 +28,11 @@ import java.util.function.Supplier;
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     private Supplier<Dictionary<K, V>>chain;
     private final int[] sizes = {17, 37, 79, 164, 331, 673, 1361, 2729, 5471, 10949, 21911, 43853, 87719, 175447, 350899, 701819};
-    private int starting;
-    private double count;
+    private int beginning;
+
     private double loadFactor;
     private Dictionary<K,V>[] array;
+    private double count;
     private int counter;
 
     public ChainingHashTable(Supplier<Dictionary<K, V>>chain) {
@@ -41,7 +42,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         for(int i = 0; i < 7; i++) {
             array[i] =chain.get();
         }
-        starting = 0;
+        beginning = 0;
         count = 0;
         counter = 0;
     }
@@ -74,19 +75,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         }
     }
 
-    @Override
-    public V find(K key) {
-        int index = Math.abs(key.hashCode() % array.length);
-        if(index >= 0) {
-            if(array[index] == null) {
-                array[index] =chain.get();
-                return null;
-            }
-            return array[index].find(key);
-        } else {
-            return null;
-        }
-    }
 
     @Override
     public Iterator<Item<K, V>> iterator() {
@@ -136,12 +124,26 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         return it;
     }
 
+    @Override
+    public V find(K key) {
+        int index = Math.abs(key.hashCode() % array.length);
+        if(index >= 0) {
+            if(array[index] == null) {
+                array[index] =chain.get();
+                return null;
+            }
+            return array[index].find(key);
+        } else {
+            return null;
+        }
+    }
+
     private Dictionary<K,V>[] resize(Dictionary<K,V> arrayChange[]) {
         Dictionary<K,V>[] dict;
-        if(starting > 15) {
+        if(beginning > 15) {
             dict = new Dictionary[arrayChange.length * 2];
         } else {
-            dict = new Dictionary[sizes[starting]];
+            dict = new Dictionary[sizes[beginning]];
         }
         for(int i = 0; i < arrayChange.length; i++) {
             if(arrayChange[i] != null) {
@@ -158,7 +160,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                 }
             }
         }
-        starting++;
+        beginning++;
         return dict;
 
     }

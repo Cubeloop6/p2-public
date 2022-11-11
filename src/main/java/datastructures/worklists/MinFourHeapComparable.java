@@ -93,7 +93,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
             this.data[child] = this.data[parent];
             this.data[parent] = temp;
             parent = child;
-            int first = 4 * parent+1;
+            int first = 4 * parent + 1;
             int min = first;
             if (first > this.size - 1)
                 break;
